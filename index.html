@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaxMan CPAs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .site-logo {
+            width: 150px;
+            height: auto;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        .footer-logo-img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Ripple-style click animation for buttons, nav links, about cards, and service cards */
+        /* Pulse-glow animation for hover states */
+        @keyframes pulse-glow {
+            0% {
+                text-shadow: 0 0 5px #F9C784, 0 0 10px rgba(249, 199, 132, 0.3);
+            }
+
+            50% {
+                text-shadow: 0 0 10px #F9C784, 0 0 20px rgba(249, 199, 132, 0.6);
+            }
+
+            100% {
+                text-shadow: 0 0 5px #F9C784, 0 0 10px rgba(249, 199, 132, 0.3);
+            }
+        }
+
+        button,
+        .nav-links a,
+        .about-card,
+        .service-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after,
+        .nav-links a::after,
+        .about-card::after,
+        .service-card::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            /* Use slightly different alpha for button vs others for distinction if desired */
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            transition: width 0.5s ease, height 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* Lower alpha for nav-links/about/service cards for subtler ripple */
+        .nav-links a::after,
+        .about-card::after,
+        .service-card::after {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        button:active::after,
+        .nav-links a:active::after,
+        .about-card:active::after,
+        .service-card:active::after {
+            width: 200px;
+            height: 200px;
+            transition: 0s;
+        }
+
+        /* Unique hover effect for footer links */
+        footer a {
+            position: relative;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-color);
+        }
+
+        footer a:hover::after {
+            width: 100%;
+        }
+
+        :root {
+            --bg-color: #1C1C1C;
+            /* Charcoal Black */
+            --text-color: #EAE7E3;
+            /* Light Gray Text */
+            --card-bg: #2A2A2A;
+            /* Dark Gray */
+            --accent-color: #F9C784;
+            /* Warm Tan */
+            --hero-bg: linear-gradient(135deg, #1C1C1C, #2A2A2A);
+            /* Dark Gradient */
+            --faq-text-color: #EAE7E3;
+            --faq-heading-color: #A03030;
+        }
+
+        body.light-mode {
+            --bg-color: #F4F1EE;
+            --text-color: #2A2A2A;
+            --card-bg: #FFFFFF;
+            --accent-color: #A03030;
+            --hero-bg: linear-gradient(135deg, #FFFFFF, #F4F1EE);
+            --faq-text-color: #2A2A2A;
+            background-image: none;
+        }
+
+        html {
+            height: 100%;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            width: 100vw;
+            height: 100%;
+            /* background-image: url('assets/topographic-bg.png'); */
+            /* background-repeat: repeat; */
+            /* background-size: 120px; */
+            /* background-position: center center; */
+            /* background-attachment: fixed; */
+        }
+
+        .nav-logo,
+        .nav-links a,
+        .about-card h3,
+        .service-card h3,
+        .contact-info a {
+            color: var(--accent-color);
+        }
+
+        /* Logo text style for top logo (if used) */
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: none;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: inherit;
+            color: inherit;
+        }
+
+        .about-card,
+        .service-card {
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .toggle-theme {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-color);
+            background: none;
+            color: var(--accent-color);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            box-shadow: 0 0 8px var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+
+        .toggle-theme:hover {
+            background: linear-gradient(135deg, #F9C784, #FFA94D);
+            color: var(--bg-color);
+        }
+
+        .about-card:hover,
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+        }
+
+        .hero {
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.3), rgba(28, 28, 28, 0.7));
+            z-index: 0;
+        }
+
+        .hero h1,
+        .hero p {
+            position: relative;
+            z-index: 1;
+        }
+
+        section::after {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-toggle {
+                display: block;
+                font-size: 2rem;
+                color: var(--accent-color);
+                padding: 0 1rem;
+            }
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-color);
+        }
+
+        body.light-mode .section-title {
+            color: var(--faq-heading-color);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 8px var(--accent-color);
+            }
+
+            50% {
+                box-shadow: 0 0 18px var(--accent-color);
+            }
+
+            100% {
+                box-shadow: 0 0 8px var(--accent-color);
+            }
+        }
+
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Navigation styles */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: transparent;
+        }
+
+        .nav-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 0.75rem 2rem;
+            width: 100%;
+        }
+
+        .nav-logo-wrapper {
+            background: transparent;
+            grid-column: 1 / 2;
+            padding-left: 1rem;
+            width: fit-content;
+        }
+
+        .nav-links-wrapper {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 10px;
+            grid-column: 2 / 3;
+            justify-self: center;
+            padding: 0.5rem 2rem;
+        }
+
+        .nav-right {
+            grid-column: 3 / 4;
+            justify-self: end;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            width: 100vw;
+            background: url('tm.gif') center center / cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .hero h1,
+        .hero p {
+            z-index: 1;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounceInDown 1.2s both;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            animation: bounceInUp 1.2s both;
+            animation-delay: 0.6s;
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 2rem;
+        }
+
+        .snap-container {
+            scroll-snap-type: y mandatory;
+            scroll-padding-top: 80px;
+            overscroll-behavior-y: contain;
+            /* Remove ↓↓↓ */
+            /* height: 100vh; */
+            /* overflow-y: scroll; */
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--accent-color);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 2rem;
+            border-radius: 8px;
+            transition: transform 0.4s cubic-bezier(0.25, 1.25, 0.5, 1.5), box-shadow 0.4s ease, scale 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) rotateX(3deg);
+            box-shadow: 0 0 20px #F9C784, 0 0 30px rgba(249, 199, 132, 0.3);
+            scale: 1.08;
+        }
+
+        .service-card h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .service-card:hover h3 {
+            transform: scale(1.1);
+            color: #F9C784;
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        .service-card p {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Contact section */
+        .contact-info {
+            text-align: center;
+            font-size: 1.25rem;
+        }
+
+        .contact-info a {
+            color: var(--accent-color);
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        .custom-footer {
+            background: rgba(13, 13, 13, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #eae7e3;
+            padding: 3rem 2rem;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-column h4 {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            display: block;
+            color: #ccc;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-300px);
+            }
+
+            60% {
+                opacity: 1;
+                transform: translateY(25px);
+            }
+
+            80% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(300px);
+            }
+
+            60% {
+                opacity: 1;
+                transform: translateY(-20px);
+            }
+
+            80% {
+                transform: translateY(10px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.6s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+
+
+        .about-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .about-card {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 1rem;
+            border-radius: 12px;
+            flex: 1 1 300px;
+            max-width: 320px;
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .about-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .about-card-content {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        /* Testimonial horizontal scroll band */
+        .testimonial-band {
+            overflow: hidden;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .testimonial-track {
+            display: flex;
+            gap: 2rem;
+            animation: scroll-left 40s linear infinite;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .testimonial-card {
+            width: 360px;
+            height: auto;
+            flex-shrink: 0;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        /* FAQ Interactive Styles */
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--faq-heading-color);
+        }
+
+        .faq-number {
+            color: var(--accent-color);
+            font-size: 1rem;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        /* Ensure .faq-text color is visible in both dark and light modes */
+        .faq-text {
+            flex: 1;
+            text-align: center;
+            color: #FFFFFF;
+        }
+
+        .faq-toggle {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            color: #ccc;
+            text-align: center;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        /* Flip Card Styles for US vs Global Services */
+        /* US vs Global Services Card */
+        .flip-card {
+            background-color: transparent;
+            width: 280px;
+            min-height: 350px;
+            height: 350px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s ease;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            backface-visibility: hidden;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(249, 199, 132, 0.3);
+        }
+
+        .flip-card-front {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Modern Global List for Global Services Card and US Services Card */
+        .modern-global-list {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        .modern-global-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            color: #fff;
+        }
+
+        .modern-global-list li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .modern-global-list i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+
+        /* FAQ Interactive Styles */
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: inherit;
+        }
+
+
+        .faq-number {
+            color: var(--accent-color);
+            font-size: 1rem;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        /* Remove color override for .faq-text in light mode */
+        /* body.light-mode .faq-text {
+            color: var(--faq-text-color);
+        } */
+
+        /* Employee photo style for employee cards */
+        .employee-photo {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AccountingService",
+      "name": "TaxMan CPAs",
+      "image": "https://via.placeholder.com/300x100",
+      "url": "https://taxman-cpas.com",
+      "telephone": "+1-555-555-1234",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "123 Finance Ave",
+        "addressLocality": "Los Angeles",
+        "addressRegion": "CA",
+        "postalCode": "90001",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "34.0522",
+        "longitude": "-118.2437"
+      },
+      "openingHours": "Mo-Fr 09:00-17:00",
+      "priceRange": "$$",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "17"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": "Amit Parekh",
+          "datePublished": "2021-05-01",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          },
+          "reviewBody": "Chandan is very knowledgeable in Taxes and provides prompt service."
+        },
+        {
+          "@type": "Review",
+          "author": "Kunjan Bhatt",
+          "datePublished": "2021-06-15",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          },
+          "reviewBody": "Excellent service, efficient communication, and answered all my questions."
+        }
+      ]
+    }
+    </script>
+</head>
+
+<body>
+    <canvas id="bgCanvas"
+        style="position: fixed; top: 0; left: 0; z-index: -1; backdrop-filter: blur(6px); background-color: rgba(255, 255, 255, 0.05);"></canvas>
+
+    <!-- Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="nav-logo-wrapper">
+                <div class="nav-logo">TaxMan</div>
+            </div>
+            <div class="nav-links-wrapper">
+                <nav class="nav-links">
+                    <a href="#about">About</a>
+                    <a href="#services">Services</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <button id="theme-toggle" class="toggle-theme"><span id="theme-icon">🌙</span></button>
+            </div>
+        </div>
+    </header>
+    <div class="snap-container">
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="logo-container">
+                <img src="taxman_logo.png" alt="TaxMan CPAs Logo" class="site-logo">
+            </div>
+            <h1>Welcome to TaxMan CPAs</h1>
+            <p>Trusted Tax & Accounting Professionals</p>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-cards">
+                <div class="about-card reveal">
+                    <img src="pic1.jpg" alt="Expertise">
+                    <div class="about-card-content">
+                        <h3>Expertise</h3>
+                        <p>Working as a Accountant/CPA/CFO for 25 years of experience.</p>
+                    </div>
+                </div>
+                <div class="about-card reveal">
+                    <img src="pic2.jpg" alt="Personalized Service">
+                    <div class="about-card-content">
+                        <h3>Personalized Service</h3>
+                        <p>Dedicated support tailored to your financial and business needs.</p>
+                    </div>
+                </div>
+                <div class="about-card reveal">
+                    <img src="pic3.jpg" alt="Reliable Partnership">
+                    <div class="about-card-content">
+                        <h3>Reliable Partnership</h3>
+                        <p>Committed to helping your business grow through accurate and timely management.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services">
+            <h2 class="section-title">Our Services (US & GLOBAL)</h2>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <h3>Tax Preparation Services</h3>
+                    <p>Tax help backed by experienced CPAs and EAs, from filing returns to resolving IRS issues and
+                        everything in between.</p>
+                </div>
+                <div class="service-card reveal">
+                    <h3>Bookkeeping Services</h3>
+                    <p>Expert small business bookkeeping services to keep your financial records accurate and
+                        up-to-date.
+                    </p>
+                </div>
+                <div class="service-card reveal">
+                    <h3>Part-Time Controller Services</h3>
+                    <p>Experienced CPA with over 25 years of experience offering part-time controller services at
+                        competitive rates.</p>
+                </div>
+                <div class="service-card reveal">
+                    <h3>Part-Time CFO Services</h3>
+                    <p>Leverage the expertise of a seasoned CPA providing part-time CFO services to guide your
+                        business's
+                        financial strategy.</p>
+                </div>
+            </div>
+            <!-- US & Global Cards -->
+            <div
+                style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; max-width: 1000px; margin: 2rem auto 0 auto;">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front" style="background-image: url('usmap.jpg');">
+                            <div
+                                style="background: rgba(0,0,0,0.5); padding: 1rem 1.5rem; border-radius: 10px; font-size: 1.5rem; color: white;">
+                                🇺🇸 US Services
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <ul class="modern-global-list">
+                                <li><i class="fas fa-file-invoice-dollar"></i> Tax Preparation</li>
+                                <li><i class="fas fa-calculator"></i> Bookkeeping & Payroll</li>
+                                <li><i class="fas fa-shield-alt"></i> IRS Audit Support</li>
+                                <li><i class="fas fa-building"></i> Business Incorporation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front" style="background-image: url('worldmap.jpg');">
+                            <div
+                                style="background: rgba(0,0,0,0.5); padding: 1rem 1.5rem; border-radius: 10px; font-size: 1.5rem; color: white;">
+                                🌍 Global Services
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <ul class="modern-global-list">
+                                <li><i class="fas fa-chart-line"></i> Financial Strategy</li>
+                                <li><i class="fas fa-briefcase"></i> BRO Consulting Services</li>
+                                <li><i class="fas fa-globe"></i> International Tax Planning</li>
+                                <li><i class="fas fa-user-tie"></i> Virtual CFO Services</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <section id="employees">
+            <h2 class="section-title">Our Employees</h2>
+            <div class="about-cards">
+                <div class="employee-card about-card reveal">
+                    <img src="anitaK.jpeg" alt="Anita Kaushik" class="employee-photo">
+                    <h3>ANITA KAUSHIK</h3>
+                    <p>Customer Service Rep</p>
+                    <p>Supporting clients with care and professionalism.</p>
+                </div>
+                <div class="employee-card about-card reveal">
+                    <img src="khushiK.png" alt="Khushi Kaushik" class="employee-photo">
+                    <h3>KHUSHI KAUSHIK</h3>
+                    <p>Tech Consultant / Web Developer</p>
+                    <p>Building innovative digital tools for clients.</p>
+                </div>
+                <div class="employee-card about-card reveal">
+                    <img src="himanshuK.jpeg" alt="Himanshu Kaushik" class="employee-photo">
+                    <h3>HIMANSHU KAUSHIK</h3>
+                    <p>Innovation, Health, and Sales Lead</p>
+                    <p>Bridging innovation, wellness, and client success.</p>
+                </div>
+                <div class="employee-card about-card reveal">
+                    <img src="chandanK.jpeg" alt="Chandan Kaushik" class="employee-photo">
+                    <h3>CHANDAN KAUSHIK</h3>
+                    <p>CPA, CEO, Consultant</p>
+                    <p>Guiding financial strategy and business growth.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonial-band">
+                <div class="testimonial-track">
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Sonal Shah/Sanghvi</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Mr Kaushik is an excellent CPA. He is well versed with all Tax’s Laws. He listened to the
+                            clients and does not rush. I had a wonderful experience with him. I will...</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Pinal Patel</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Amit Parekh</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Chandan is very knowledgeable in Taxes and provides prompt service. Very effective
+                            communication... happy to find someone to do my taxes.</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Kunjan Bhatt</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Excellent Service, efficient communication and he was very helpful and answered all my
+                            questions concerning my services.</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Khushi Kaushik</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>I would really recommend Taxman CPAs to my friends and family. No matter if you have a large
+                            firm or a small business, Taxman CPAs got it all. Overall, they are...</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Ashutosh Randev</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Triambika Randev</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Himanshu Kaushik</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>TaxMan CPA is very knowledgeable and knows his stuff. He helped us as a part-time controller,
+                            and we are very satisfied with the results. His other services are...</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Deepak Jadhav</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Chandan is amazing. No matter if you run a business from home or are a business owner, you
+                            feel protected and confident. I can't stop recommending his services.</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Dave Kaushik</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                    <!-- Duplicate for seamless scroll -->
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Sonal Shah/Sanghvi</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Mr Kaushik is an excellent CPA. He is well versed with all Tax’s Laws. He listened to the
+                            clients and does not rush. I had a wonderful experience with him. I will...</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Pinal Patel</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Amit Parekh</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Chandan is very knowledgeable in Taxes and provides prompt service. Very effective
+                            communication... happy to find someone to do my taxes.</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Kunjan Bhatt</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Excellent Service, efficient communication and he was very helpful and answered all my
+                            questions concerning my services.</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Khushi Kaushik</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>I would really recommend Taxman CPAs to my friends and family. No matter if you have a large
+                            firm or a small business, Taxman CPAs got it all. Overall, they are...</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Ashutosh Randev</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Triambika Randev</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Himanshu Kaushik</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>TaxMan CPA is very knowledgeable and knows his stuff. He helped us as a part-time controller,
+                            and we are very satisfied with the results. His other services are...</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Deepak Jadhav</h3>
+                        <p><em>3 years ago</em></p>
+                        <p>Chandan is amazing. No matter if you run a business from home or are a business owner, you
+                            feel protected and confident. I can't stop recommending his services.</p>
+                    </div>
+                    <div class="about-card reveal testimonial-card">
+                        <h3>Dave Kaushik</h3>
+                        <p><em>3 years ago</em></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq">
+            <h2 class="section-title">FAQs</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-number">01</span>
+                        <span class="faq-text">What documents do I need to prepare my taxes?</span>
+                        <span class="faq-toggle">↗</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For Induvidual Simple Tax Return: You’ll typically need W-2s, 1099s, receipts, and investment documents to prepare your taxes.<br>
+                            For Business: Please Book a Consultation. 
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-number">02</span>
+                        <span class="faq-text">Do you help with small business bookkeeping?</span>
+                        <span class="faq-toggle">↗</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we offer full-service bookkeeping to help you keep accurate financial records.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-number">03</span>
+                        <span class="faq-text">Can you help with IRS audits or letters?</span>
+                        <span class="faq-toggle">↗</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We provide audit support and help respond to IRS or state notices to resolve your case
+                            confidently.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-number">04</span>
+                        <span class="faq-text">How much do your services cost?</span>
+                        <span class="faq-toggle">↗</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Pricing depends on the complexity of your needs. Schedule a consultation to get a custom
+                            quote.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-number">05</span>
+                        <span class="faq-text">Do you offer virtual consultations?</span>
+                        <span class="faq-toggle">↗</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we offer virtual consultations via Zoom, phone, or other preferred platforms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2 class="section-title">Contact Us</h2>
+            <!-- Calendly inline widget begin -->
+            <div class="calendly-inline-widget"
+                data-url="https://calendly.com/taxman-taxmancpas/30min?background_color=1c1c1c&text_color=eae7e3&primary_color=a03030"
+                style="min-width:320px;height:700px;"></div>
+            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+            <!-- Calendly inline widget end -->
+        </section>
+    </div> <!-- closing .snap-container -->
+
+    <!-- Footer -->
+    <footer class="custom-footer">
+        <div class="footer-logo">
+            <img src="taxman_logo.png" alt="TaxMan CPAs Logo" class="footer-logo-img">
+        </div>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>TaxMan CPAs</span>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Explore</h4>
+                    <a href="#services">Services</a>
+                    <a href="#about">About</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Others</h4>
+                    <a href="#">FAQs</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="footer-bottom">
+            <p>&copy; 2025 TaxMan CPAs. All rights reserved.</p>
+            Photo by Tima Miroshnichenko: https://www.pexels.com/photo/map-of-the-world-5725589/, Video by Leeloo The
+            First: https://www.pexels.com/video/person-preparing-tax-forms-6929602/,Photo by Photo By: Kaboompics.com:
+            https://www.pexels.com/photo/waving-flag-of-united-states-of-america-4386426/, Photo by cottonbro studio:
+            https://www.pexels.com/photo/woman-in-black-shirt-sitting-on-chair-4098374/<br>
+        </div>
+    </footer>
+    <script>
+        const themeIcon = document.getElementById('theme-icon');
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('light-mode');
+            themeIcon.textContent = body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+        document.getElementById('theme-toggle').onclick = toggleTheme;
+    </script>
+    <script>
+        const reveals = document.querySelectorAll('.reveal');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        reveals.forEach(el => observer.observe(el));
+    </script>
+    <script>
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let offset = 0;
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const spacing = 60;
+            const time = Date.now() * 0.001;
+
+            ctx.strokeStyle = `hsl(${(time * 20) % 360}, 20%, 25%)`;
+            ctx.lineWidth = 0.5;
+
+            // Vertical lines
+            for (let x = -offset % spacing; x < canvas.width; x += spacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            // Horizontal lines
+            for (let y = -offset % spacing; y < canvas.height; y += spacing) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            offset += 0.1;
+            requestAnimationFrame(drawGrid);
+        }
+
+        drawGrid();
+    </script>
+    <script>
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                const item = q.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
+        
